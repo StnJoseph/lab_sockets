@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build:broker_tcp(mingw)",
+      "type": "shell",
+      "command": "gcc",
+      "args": ["-Wall","-O2","-o","broker_tcp.exe","broker_tcp.c","-lws2_32"],
+      "group": "build",
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}

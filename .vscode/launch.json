@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug broker_tcp (gdb)",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/broker_tcp.exe",
+      "args": ["5000"],
+      "cwd": "${workspaceFolder}",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb"
+    }
+  ]
+}
