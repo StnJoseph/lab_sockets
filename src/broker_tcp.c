@@ -102,22 +102,22 @@ static Cmd parse_line(char *line, char **out_topic, char **out_body){
 static int get_port(int argc, char **argv, int fallback){ return (argc>1)? atoi(argv[1]) : fallback; }
 
 int main(int argc, char** argv){
-    if (net_init() != 0){ fputs("Winsock init failed\n", stderr); return 1; }
+    if (net_init() != 0){ fputs("Winsock init fallo\n", stderr); return 1; }
     int port = get_port(argc, argv, DEFAULT_PORT);
 
     // Creación del socket y conexión
     SOCKET lsock = socket(AF_INET, SOCK_STREAM, 0);
-    if (lsock == INVALID_SOCKET){ fputs("socket() failed\n", stderr); net_cleanup(); return 1; }
+    if (lsock == INVALID_SOCKET){ fputs("socket() fallo\n", stderr); net_cleanup(); return 1; }
 
     struct sockaddr_in addr; memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET; addr.sin_addr.s_addr = htonl(INADDR_ANY);
     addr.sin_port = htons((unsigned short)port);
 
     if (bind(lsock, (struct sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR){
-        fputs("bind() failed\n", stderr); net_close(lsock); net_cleanup(); return 1;
+        fputs("bind() fallo\n", stderr); net_close(lsock); net_cleanup(); return 1;
     }
     if (listen(lsock, 16) == SOCKET_ERROR){
-        fputs("listen() failed\n", stderr); net_close(lsock); net_cleanup(); return 1;
+        fputs("listen() fallo\n", stderr); net_close(lsock); net_cleanup(); return 1;
     }
 
     printf("Broker TCP escuchando en puerto %d...\n", port);

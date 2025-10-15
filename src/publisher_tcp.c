@@ -45,7 +45,7 @@ static int get_port(int argc, char **argv, int fallback){
 
 // ===== Main =====
 int main(int argc, char** argv){
-    if (net_init() != 0){ fputs("Winsock init failed\n", stderr); return 1; }
+    if (net_init() != 0){ fputs("Winsock init fallo\n", stderr); return 1; }
 
     // Formato del comando
     const char* host  = (argc > 1) ? argv[1] : "127.0.0.1";
@@ -54,17 +54,17 @@ int main(int argc, char** argv){
 
     // Creación del socket y conexión
     SOCKET s = socket(AF_INET, SOCK_STREAM, 0);
-    if (s == INVALID_SOCKET){ fputs("socket() failed\n", stderr); net_cleanup(); return 1; }
+    if (s == INVALID_SOCKET){ fputs("socket() fallo\n", stderr); net_cleanup(); return 1; }
 
     struct sockaddr_in srv; memset(&srv, 0, sizeof(srv));
     srv.sin_family = AF_INET;
     srv.sin_port   = htons((unsigned short)port);
     if (inet_pton(AF_INET, host, &srv.sin_addr) != 1){
-        fputs("inet_pton() failed\n", stderr); net_close(s); net_cleanup(); return 1;
+        fputs("inet_pton() fallo\n", stderr); net_close(s); net_cleanup(); return 1;
     }
 
     if (connect(s, (struct sockaddr*)&srv, sizeof(srv)) == SOCKET_ERROR){
-        fputs("connect() failed\n", stderr); net_close(s); net_cleanup(); return 1;
+        fputs("connect() fallo\n", stderr); net_close(s); net_cleanup(); return 1;
     }
 
     // Enviar 10 mensajes de gol 
