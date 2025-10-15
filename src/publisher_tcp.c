@@ -38,11 +38,6 @@ static int parse_pub(const char *line, char *topic, size_t tsize, char *msg, siz
     return 1;
 }
 
-// ===== Obtener el puerto =====
-static int get_port(int argc, char **argv, int fallback){
-    return (argc > 1) ? atoi(argv[1]) : fallback;
-}
-
 // ===== Main =====
 int main(int argc, char** argv){
     if (net_init() != 0){ fputs("Winsock init fallo\n", stderr); return 1; }
@@ -67,8 +62,8 @@ int main(int argc, char** argv){
         fputs("connect() fallo\n", stderr); net_close(s); net_cleanup(); return 1;
     }
 
-    // Enviar 20 mensajes de gol 
-    for (int i = 1; i <= 20; ++i){
+    // Enviar 10 mensajes de gol 
+    for (int i = 1; i <= 10; ++i){
         char body[MAX_MSG];
         char line[MAX_LINE];
 
