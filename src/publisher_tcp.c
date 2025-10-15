@@ -55,44 +55,38 @@ static int get_port(int argc, char **argv, int fallback){
     return (argc > 1) ? atoi(argv[1]) : fallback;
 }
 
-
-// --- publisher_tcp.c ---
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+// --- publisher_tcp.c (Windows-only, simple) ---
 int main(int argc, char** argv){
-    if (net_init()!=0){ fprintf(stderr,"Init falló\n"); return 1; }
+    if (net_init() != 0){ fputs("Winsock init failed\n", stderr); return 1; }
 
-    const char* host = (argc>1)? argv[1] : "127.0.0.1";
-    int port         = (argc>2)? atoi(argv[2]) : DEFAULT_PORT;
-    const char* topic= (argc>3)? argv[3] : "PARTIDO_A";
+    const char* host  = (argc > 1) ? argv[1] : "127.0.0.1";
+    int         port  = (argc > 2) ? atoi(argv[2]) : DEFAULT_PORT;
+    const char* topic = (argc > 3) ? argv[3] : "PARTIDO_A";
 
     SOCKET s = socket(AF_INET, SOCK_STREAM, 0);
-    if (s==INVALID_SOCKET){ fprintf(stderr,"socket() falló\n"); net_cleanup(); return 1; }
+    if (s == INVALID_SOCKET){ fputs("socket() failed\n", stderr); net_cleanup(); return 1; }
 
-    struct sockaddr_in srv; memset(&srv,0,sizeof(srv));
+    struct sockaddr_in srv; memset(&srv, 0, sizeof(srv));
     srv.sin_family = AF_INET;
     srv.sin_port   = htons((unsigned short)port);
-    inet_pton(AF_INET, host, &srv.sin_addr);
-
-    if (connect(s, (struct sockaddr*)&srv, sizeof(srv))==SOCKET_ERROR){
-        fprintf(stderr,"connect() falló\n"); net_close(s); net_cleanup(); return 1;
+    if (inet_pton(AF_INET, host, &srv.sin_addr) != 1){
+        fputs("inet_pton() failed\n", stderr); net_close(s); net_cleanup(); return 1;
     }
 
-    // Enviar >=10 mensajes
-    for (int i=1;i<=10;i++){
-        char msg[MAX_MSG];
-        snprintf(msg, sizeof(msg), "Gol %d del %s!", i, topic);
+    if (connect(s, (struct sockaddr*)&srv, sizeof(srv)) == SOCKET_ERROR){
+        fputs("connect() failed\n", stderr); net_close(s); net_cleanup(); return 1;
+    }
 
+    /* Enviar >=10 mensajes */
+    for (int i = 1; i <= 10; ++i){
+        char body[MAX_MSG];
         char line[MAX_LINE];
-        build_pub(line, sizeof(line), topic, msg);
-        send(s, line, (int)strlen(line), 0);
-#ifdef _WIN32
-        Sleep(150);
-#else
-        usleep(150*1000);
-#endif
+
+        int blen = snprintf(body, sizeof(body), "Gol %d del %s!", i, topic);
+        if (blen <= 0 || blen >= (int)sizeof(body)) continue;
+
+        int llen = build_pub(line, sizeof(line), topic, body);
+        if (llen > 0) (void)send(s, line, llen, 0);
     }
 
     net_close(s);
