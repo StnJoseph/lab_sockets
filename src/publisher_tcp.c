@@ -67,8 +67,8 @@ int main(int argc, char** argv){
         fputs("connect() fallo\n", stderr); net_close(s); net_cleanup(); return 1;
     }
 
-    // Enviar 10 mensajes de gol 
-    for (int i = 1; i <= 10; ++i){
+    // Enviar 20 mensajes de gol 
+    for (int i = 1; i <= 20; ++i){
         char body[MAX_MSG];
         char line[MAX_LINE];
 
