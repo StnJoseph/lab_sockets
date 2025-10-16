@@ -53,4 +53,4 @@ Para la creación del objeto:
 Para la ejecución:
 - broker_tcp
 - subscriber_tcp ó subscriber_tcp.exe 127.0.0.1 5000 PARTIDO_A PARTIDO_B
-- >publisher_tcp ó publisher_tcp.exe 127.0.0.1 5000 PARTIDO_B
+- publisher_tcp ó publisher_tcp.exe 127.0.0.1 5000 PARTIDO_B
